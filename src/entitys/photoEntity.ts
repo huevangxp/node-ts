@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, BeforeInsert } from 'typeorm';
 import {User} from './userEntify'
 // import { UUID } from 'crypto';
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 export class Photo extends BaseEntity{
@@ -15,4 +15,10 @@ export class Photo extends BaseEntity{
     description!: string
     @ManyToOne(() => User, user => user.photo)
     user?: User
+    @BeforeInsert()
+    generateUuid() {
+        if (!this.id) {
+            this.id = uuidv4();
+        }
+    }
 }
